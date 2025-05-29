@@ -12,7 +12,8 @@ __pycache__/
 # Virtual Environment folders
 venv/
 .venv/
-
+#data files
+data/
 # Distribution / packaging
 build/
 dist/
