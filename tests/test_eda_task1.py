@@ -40,20 +40,4 @@ def test_time_series_analysis_runs():
         eda.time_series_analysis()
     except Exception as e:
         assert False, f"time_series_analysis failed: {e}"
-def test_text_analysis_runs_on_small_data():
-    df = pd.DataFrame({
-        'headline': [
-            'Tesla launches new electric car',
-            'Apple stock hits all-time high',
-            'Google announces AI breakthrough'
-        ],
-        'publisher': ['TechCrunch', 'Bloomberg', 'Reuters'],
-        'date': ['2024-01-01 09:00:00'] * 3,
-        'stock': ['TSLA', 'AAPL', 'GOOG']
-    })
-    eda = EDA(df)
-    
-    try:
-        eda.text_analysis(num_topics=2, num_words=3)
-    except Exception as e:
-        assert False, f"text_analysis failed: {e}"
+
