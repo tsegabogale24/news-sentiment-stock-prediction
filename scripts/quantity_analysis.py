@@ -83,3 +83,8 @@ class QuantitativeAnalysis:
         # Optimize layout and display
         plt.tight_layout()
         plt.show()
+    def save_to_csv(self, filepath="./../data/stock_data.csv"):
+     if self.df.empty:
+        raise ValueError("No data to save. Please load or compute data first.")
+     self.df.to_csv(filepath)
+     print(f"Data saved to {filepath}")
