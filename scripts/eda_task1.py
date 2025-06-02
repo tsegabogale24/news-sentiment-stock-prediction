@@ -108,3 +108,13 @@ class EDA:
         plt.grid()
         plt.tight_layout()
         plt.show()
+    def get_cleaned_news(self):
+       cleaned = self.df.copy()
+    # Drop rows with missing or empty headlines or dates
+       cleaned = cleaned.dropna(subset=['headline', 'date'])
+       cleaned['headline'] = cleaned['headline'].astype(str).str.strip()
+       cleaned = cleaned[cleaned['headline'] != ""]
+    # Standardize date to date only (not datetime)
+       cleaned['date'] = pd.to_datetime(cleaned['date']).dt.date
+       cleaned = cleaned.drop_duplicates(subset=['date', 'headline'])
+       return cleaned[['date', 'headline']]
