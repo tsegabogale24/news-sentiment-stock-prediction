@@ -33,15 +33,23 @@ class QuantitativeAnalysis:
         self.df['MACD_hist'] = macd_hist
 
         print("Indicators computed: SMA_20, RSI, MACD")
-
+#use yfinanace instead of pynance because pynance's API has changed
     def financial_metrics(self):
-        print(f"--- Financial Metrics for {self.ticker} ---")
+        print(f"--- Financial Metrics for {self.ticker.upper()} ---")
         try:
+            # Get data using yfinance instead since pynance API has changed
             info = self.yf_ticker.info
-            print("P/E Ratio:", info.get("trailingPE", "N/A"))
-            print("Market Cap:", info.get("marketCap", "N/A"))
+            
+            print("Current Price:      ", info.get('currentPrice', 'N/A'))
+            print("P/E Ratio:          ", info.get('trailingPE', 'N/A'))
+            print("Earnings Per Share: ", info.get('trailingEps', 'N/A'))
+            print("Market Cap:         ", info.get('marketCap', 'N/A'))
+            print("52 Week High:       ", info.get('fiftyTwoWeekHigh', 'N/A'))
+            print("52 Week Low:        ", info.get('fiftyTwoWeekLow', 'N/A'))
+            print("Dividend Yield:     ", info.get('dividendYield', 'N/A'))
+
         except Exception as e:
-            print("Error fetching metrics from yfinance:", e)
+            print("Error fetching metrics:", e)
 
     def visualize(self):
         if self.df.empty:
@@ -49,7 +57,7 @@ class QuantitativeAnalysis:
 
         plt.figure(figsize=(14, 6))
 
-        # Price and SMA
+        # Price and 20-Day Simple Moving Average
         plt.subplot(2, 1, 1)
         plt.plot(self.df['Close'], label='Close Price')
         plt.plot(self.df['SMA_20'], label='SMA 20', linestyle='--')
@@ -59,12 +67,24 @@ class QuantitativeAnalysis:
         # RSI
         plt.subplot(2, 2, 3)
         plt.plot(self.df['RSI'], label='RSI', color='orange')
-        plt.axhline(70, linestyle='--', color='red')
-        plt.axhline(30, linestyle='--', color='green')
+        plt.axhline(70, linestyle='--', color='red')     # Overbought line
+        plt.axhline(30, linestyle='--', color='green')   # Oversold line
         plt.title('RSI')
         plt.legend()
 
         # MACD
         plt.subplot(2, 2, 4)
         plt.plot(self.df['MACD'], label='MACD')
-        plt.plot
+        plt.plot(self.df['MACD_signal'], label='Signal Line', linestyle='--')
+        plt.bar(self.df.index, self.df['MACD_hist'], label='Histogram', alpha=0.3)
+        plt.title('MACD')
+        plt.legend()
+
+        # Optimize layout and display
+        plt.tight_layout()
+        plt.show()
+    def save_to_csv(self, filepath="./../data/stock_data.csv"):
+     if self.df.empty:
+        raise ValueError("No data to save. Please load or compute data first.")
+     self.df.to_csv(filepath)
+     print(f"Data saved to {filepath}")
